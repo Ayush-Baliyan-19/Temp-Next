@@ -9,17 +9,22 @@ const inter = Inter({ subsets: ['latin'] })
 
 
 export default function RootLayout({ children }) {
-  const pathName= usePathname()
+  const pathName = usePathname()
   return (
     <html lang="en">
+      <head>
+        <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+      </head>
       <body className={inter.className}>
-      <StateProvider>
-        {
-          pathName !== '/Screen3' &&
-          <Navbar/>
-        }
-        {children}
-      </StateProvider>
+        <StateProvider>
+          {
+            pathName !== '/Screen3' &&
+            <Navbar />
+          }
+          {children}
+        </StateProvider>
       </body>
     </html>
   )

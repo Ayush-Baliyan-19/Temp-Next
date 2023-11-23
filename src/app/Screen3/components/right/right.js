@@ -1,8 +1,6 @@
 "use client"
 
 import React, { useEffect, useState } from "react"
-import { compile } from "vega-lite"
-import { parse, View } from "vega"
 import { MdDelete } from "react-icons/md"
 import "./Right.css"
 import {
@@ -528,7 +526,7 @@ const Right = ({
   //   )
   // }
 
-  const dbArray = [0, 1, 2, 3, 4, 5]
+  // const dbArray = [0, 1, 2, 3, 4, 5]
   // React.useEffect(() => {
   //   const filteredDBs = dbArray.filter(item => item !== db)
   //   setSvgs([])
@@ -545,7 +543,7 @@ const Right = ({
   //   // eslint-disable-next-line react-hooks/exhaustive-deps
   // }, [db, best_DBos])
 
-  const [personalisedDBOSVGs, setPersonalisedDBOSVGs] = React.useState([])
+  // const [personalisedDBOSVGs, setPersonalisedDBOSVGs] = React.useState([])
 
   // const getPersonalisedDBO = async () => {
   //   const svgPromises = personalisedDBO.map(async dboArray => {
@@ -577,12 +575,6 @@ const Right = ({
   //   // eslint-disable-next-line react-hooks/exhaustive-deps
   // }, [personalisedDBO])
 
-  const [DBO_Ratings, setDBO_Ratings] = useState([
-    {
-      DBO: 0,
-      Ratings: 0
-    }
-  ])
   const [isPersonalisedSelected, setIsPersonalisedSelected] = useState(false)
 
   const [evalutationData, setEvalutationData] = useState([])
