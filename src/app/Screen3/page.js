@@ -42,7 +42,7 @@ export default function Page() {
     var arr = []
     {
       if(Array.isArray(personalisedDBO))
-      for (let i = 0; i < personalisedDBO.length; i++) {
+      for (let i = 0; i < personalisedDBO?.length; i++) {
         arr.push(i)
       }
     }
