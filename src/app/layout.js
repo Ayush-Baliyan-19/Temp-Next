@@ -12,11 +12,11 @@ export default function RootLayout({ children }) {
   const pathName = usePathname()
   return (
     <html lang="en">
-      <head>
-        <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
-        <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
-        <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
-      </head>
+      {/* <head>
+        <script src="https://cdn.jsdelivr.net/npm/vega@5" async></script>
+        <script src="https://cdn.jsdelivr.net/npm/vega-lite@5" async></script>
+        <script src="https://cdn.jsdelivr.net/npm/vega-embed@6" async></script>
+      </head> */}
       <body className={inter.className}>
         <StateProvider>
           {
