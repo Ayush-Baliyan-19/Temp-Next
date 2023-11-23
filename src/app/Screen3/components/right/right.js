@@ -9,6 +9,8 @@ import {
   BsFillLockFill,
   BsFillUnlockFill
 } from "react-icons/bs"
+import { compile } from "vega-lite"
+import { parse,View } from "vega"
 import { AiOutlineDownload, AiOutlineInfoCircle, AiFillEdit } from "react-icons/ai"
 import { StateContext } from "../../../StateProvider"
 import { BiHelpCircle } from "react-icons/bi"
@@ -478,102 +480,102 @@ const Right = ({
     ///////////////////////////////    End of VL visualization Specification    /////////////////////////////////
   ]
   const dbo = db
-  // const getSVGs = async fileNumber => {
-  //   const rows = best_DBos[fileNumber].DBo
-  //   // console.log(best_DBos[fileNumber]);
+  const getSVGs = async fileNumber => {
+    const rows = best_DBos[fileNumber].DBo
+    // console.log(best_DBos[fileNumber]);
 
-  //   const vlSpec_2 = []
-  //   for (let i = 0; i < rows.length; i++) {
-  //     for (let j = 0; j < visualizations.length; j++) {
-  //       if (visualizations[j].vis_name === rows[i][1]) {
-  //         let tempGraph = JSON.parse(JSON.stringify(visualizations[j]))
-  //         const vl_encode = Object.keys(tempGraph.encoding)
-  //         for (let k = 2; k < rows[i].length; k++) {
-  //           for (let l = 0; l < vl_encode.length; l++) {
-  //             if (vl_encode[l] === rows[i][k]) {
-  //               tempGraph.encoding[vl_encode[l]] = {
-  //                 ...tempGraph.encoding[vl_encode[l]],
-  //                 field: rows[0][k]
-  //               }
-  //             }
-  //           }
-  //         }
-  //         vlSpec_2.push({ ...tempGraph })
-  //       }
-  //     }
-  //   }
+    const vlSpec_2 = []
+    for (let i = 0; i < rows.length; i++) {
+      for (let j = 0; j < visualizations.length; j++) {
+        if (visualizations[j].vis_name === rows[i][1]) {
+          let tempGraph = JSON.parse(JSON.stringify(visualizations[j]))
+          const vl_encode = Object.keys(tempGraph.encoding)
+          for (let k = 2; k < rows[i].length; k++) {
+            for (let l = 0; l < vl_encode.length; l++) {
+              if (vl_encode[l] === rows[i][k]) {
+                tempGraph.encoding[vl_encode[l]] = {
+                  ...tempGraph.encoding[vl_encode[l]],
+                  field: rows[0][k]
+                }
+              }
+            }
+          }
+          vlSpec_2.push({ ...tempGraph })
+        }
+      }
+    }
 
-  //   const vlSpec = {
-  //     data: { values: fileData.map((item) => item.join(",")).join("\n"), format: { type: "csv" } },
-  //     columns: 3,
-  //     vconcat: vlSpec_2, // Wrap element in an array for vconcat
-  //     resolve: { scale: { color: "independent" } }
-  //   }
-  //   const vegaspec = compile(vlSpec).spec
-  //   const view = new View(parse(vegaspec), { renderer: "none" })
-  //   const svgIndex = fileNumber
-  //   await view.toSVG().then(svg =>
-  //     setSvgs(prevSVGs => {
-  //       return [
-  //         ...prevSVGs,
-  //         {
-  //           svg: svg,
-  //           index: svgIndex,
-  //           evaluation: best_DBos[fileNumber].evalution
-  //         }
-  //       ]
-  //     })
-  //   )
-  // }
+    const vlSpec = {
+      data: { values: fileData.map((item) => item.join(",")).join("\n"), format: { type: "csv" } },
+      columns: 3,
+      vconcat: vlSpec_2, // Wrap element in an array for vconcat
+      resolve: { scale: { color: "independent" } }
+    }
+    const vegaspec = compile(vlSpec).spec
+    const view = new View(parse(vegaspec), { renderer: "none" })
+    const svgIndex = fileNumber
+    await view.toSVG().then(svg =>
+      setSvgs(prevSVGs => {
+        return [
+          ...prevSVGs,
+          {
+            svg: svg,
+            index: svgIndex,
+            evaluation: best_DBos[fileNumber].evalution
+          }
+        ]
+      })
+    )
+  }
 
-  // const dbArray = [0, 1, 2, 3, 4, 5]
-  // React.useEffect(() => {
-  //   const filteredDBs = dbArray.filter(item => item !== db)
-  //   setSvgs([])
-  //   if (best_DBos && best_DBos.length > 0)
-  //     setTimeout(() => {
-  //       getSVGs(filteredDBs[0]).then(() => {
-  //         getSVGs(filteredDBs[1]).then(() => {
-  //           getSVGs(filteredDBs[2]).then(() => {
-  //             getSVGs(filteredDBs[3])
-  //           })
-  //         })
-  //       })
-  //     }, 500)
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [db, best_DBos])
+  const dbArray = [0, 1, 2, 3, 4, 5]
+  React.useEffect(() => {
+    const filteredDBs = dbArray.filter(item => item !== db)
+    setSvgs([])
+    if (best_DBos && best_DBos.length > 0)
+      setTimeout(() => {
+        getSVGs(filteredDBs[0]).then(() => {
+          getSVGs(filteredDBs[1]).then(() => {
+            getSVGs(filteredDBs[2]).then(() => {
+              getSVGs(filteredDBs[3])
+            })
+          })
+        })
+      }, 500)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [db, best_DBos])
 
-  // const [personalisedDBOSVGs, setPersonalisedDBOSVGs] = React.useState([])
+  const [personalisedDBOSVGs, setPersonalisedDBOSVGs] = React.useState([])
 
-  // const getPersonalisedDBO = async () => {
-  //   const svgPromises = personalisedDBO.map(async dboArray => {
-  //     const vlSpec_2 = {
-  //       data: { values: fileData.map((item) => item.join(",")).join("\n"), format: { type: "csv" } },
-  //       columns: 3,
-  //       vconcat: dboArray.elem,
-  //       resolve: { scale: { color: "independent" } }
-  //     }
-  //     const vegaspec = compile(vlSpec_2).spec
-  //     const view = new View(parse(vegaspec), { renderer: "none" })
-  //     const svg = await view.toSVG()
-  //     return svg
-  //   })
+  const getPersonalisedDBO = async () => {
+    const svgPromises = personalisedDBO.map(async dboArray => {
+      const vlSpec_2 = {
+        data: { values: fileData.map((item) => item.join(",")).join("\n"), format: { type: "csv" } },
+        columns: 3,
+        vconcat: dboArray.elem,
+        resolve: { scale: { color: "independent" } }
+      }
+      const vegaspec = compile(vlSpec_2).spec
+      const view = new View(parse(vegaspec), { renderer: "none" })
+      const svg = await view.toSVG()
+      return svg
+    })
 
-  //   const svgResults = await Promise.all(svgPromises)
+    const svgResults = await Promise.all(svgPromises)
 
-  //   setPersonalisedDBOSVGs(
-  //     svgResults.map((svg, index) => ({
-  //       svg,
-  //       index,
-  //       vis: personalisedDBO[index].vis
-  //     }))
-  //   )
-  // }
+    setPersonalisedDBOSVGs(
+      svgResults.map((svg, index) => ({
+        svg,
+        index,
+        vis: personalisedDBO[index].vis
+      }))
+    )
+  }
 
-  // React.useEffect(() => {
-  //   getPersonalisedDBO()
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [personalisedDBO])
+  React.useEffect(() => {
+    getPersonalisedDBO()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [personalisedDBO])
 
   const [isPersonalisedSelected, setIsPersonalisedSelected] = useState(false)
 
