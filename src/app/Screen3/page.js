@@ -1,9 +1,9 @@
 "use client"
 
 import React, { useState } from "react"
-import Screen from "./components/center/center"
-import LeftComponent from "./components/left/left"
-import Right from "./components/right/right"
+// import Screen from "./components/center/center"
+// import LeftComponent from "./components/left/left"
+// import Right from "./components/right/right"
 import { BiSolidLeftArrow } from "react-icons/bi"
 
 export default function Page() {
