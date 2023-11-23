@@ -512,20 +512,20 @@ const Right = ({
       resolve: { scale: { color: "independent" } }
     }
     const vegaspec = compile(vlSpec).spec
-    const view = new View(parse(vegaspec), { renderer: "none" })
-    const svgIndex = fileNumber
-    await view.toSVG().then(svg =>
-      setSvgs(prevSVGs => {
-        return [
-          ...prevSVGs,
-          {
-            svg: svg,
-            index: svgIndex,
-            evaluation: best_DBos[fileNumber].evalution
-          }
-        ]
-      })
-    )
+    // const view = new View(parse(vegaspec), { renderer: "none" })
+    // const svgIndex = fileNumber
+    // await view.toSVG().then(svg =>
+    //   setSvgs(prevSVGs => {
+    //     return [
+    //       ...prevSVGs,
+    //       {
+    //         svg: svg,
+    //         index: svgIndex,
+    //         evaluation: best_DBos[fileNumber].evalution
+    //       }
+    //     ]
+    //   })
+    // )
   }
 
   const dbArray = [0, 1, 2, 3, 4, 5]
@@ -556,9 +556,9 @@ const Right = ({
         resolve: { scale: { color: "independent" } }
       }
       const vegaspec = compile(vlSpec_2).spec
-      const view = new View(parse(vegaspec), { renderer: "none" })
-      const svg = await view.toSVG()
-      return svg
+      // const view = new View(parse(vegaspec), { renderer: "none" })
+      // const svg = await view.toSVG()
+      // return svg
     })
 
     const svgResults = await Promise.all(svgPromises)
