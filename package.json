@@ -16,6 +16,8 @@
     "sass": "^1.69.5"
   },
   "devDependencies": {
+    "@types/node": "20.9.4",
+    "@types/react": "18.2.38",
     "autoprefixer": "^10",
     "daisyui": "^4.4.3",
     "eslint": "^8",
