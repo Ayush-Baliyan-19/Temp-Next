@@ -10,7 +10,7 @@ import {
   BsFillUnlockFill
 } from "react-icons/bs"
 import { compile } from "vega-lite"
-// import { parse,View } from "vega"
+import { parse,View } from "vega"
 import { AiOutlineDownload, AiOutlineInfoCircle, AiFillEdit } from "react-icons/ai"
 import { StateContext } from "../../../StateProvider"
 import { BiHelpCircle } from "react-icons/bi"
@@ -513,38 +513,21 @@ const Right = ({
       resolve: { scale: { color: "independent" } }
     }
 
-    // const vegaspec = compile(vlSpec).spec;
-    // console.log(vegaspec);
-    // const view = new View(parse(vegaspec), { renderer: "none" })
+    const vegaspec = compile(vlSpec).spec;
+    const view = new View(parse(vegaspec), { renderer: "none" })
     const svgIndex = fileNumber
-    setSvgs(prevSVGs => {
-      return [
-        ...prevSVGs,
-        {
-          index: svgIndex,
-          evaluation: best_DBos[fileNumber].evalution
-        }
-      ]
-    })
-    setTimeout(async () => {
-      await embed(`#Right-DBo-${fileNumber}`, vlSpec).then( async svg => {
-
-        const svgString = await svg.view.toSVG()
-        setSvgs(prevSVGs => {
-          return prevSVGs.map(item => {
-            if (item.index === svgIndex) {
-              return {
-                ...item,
-                svg: svgString
-              }
-            }
-            return item
+    await view.toSVG().then(svg =>
+      setSvgs(prevSVGs => {
+        return [
+          ...prevSVGs,
+          {
+            svg: svg,
+            index: svgIndex,
+            evaluation: best_DBos[fileNumber].evalution
           }
-          )
-        })
-      }
-      )
-    }, 100)
+        ]
+      })
+    )
   }
 
   const dbArray = [0, 1, 2, 3, 4, 5]
@@ -574,12 +557,10 @@ const Right = ({
         vconcat: dboArray.elem,
         resolve: { scale: { color: "independent" } }
       }
-      // const vegaspec = compile(vlSpec_2).spec
-      let svgString = ""
-      await embed(`#Right-Personalised-Dbo`,vlSpec_2).then(async svg => {
-        svgString = await svg.view.toSVG()
-      })
-      return svgString
+      const vegaspec = compile(vlSpec_2).spec
+      const view = new View(parse(vegaspec), { renderer: "none" })
+      const svg = await view.toSVG()
+      return svg
     })
 
     const svgResults = await Promise.all(svgPromises)
@@ -821,9 +802,8 @@ const EachDBOComponent = ({
       >
         <div className="px-2 py-2 ">
           <div
-            className=" h-max w-max svg-container"
-            id={`Right-DBo-${index}`}
-          dangerouslySetInnerHTML={{ __html: svg }}
+            className="h-max w-max svg-container"
+            dangerouslySetInnerHTML={{ __html: svg }}
           />
         </div>
       </div>
