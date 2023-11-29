@@ -1,11 +1,11 @@
 "use client";
 
 /* eslint-disable */
-// Your code here
 
-import React, { useState, useContext, useEffect, Suspense } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { StateContext } from "../StateProvider";
 import { useRouter } from "next/navigation";
+const get_Best_DBos = require("../Utils/Sort")
 import {
   AiFillEdit,
   AiFillPieChart,
@@ -18,13 +18,12 @@ import { TbChartHistogram } from "react-icons/tb";
 import { BsBarChartFill, BsTriangleFill } from "react-icons/bs";
 import { BiScatterChart, BiSolidDownArrow } from "react-icons/bi";
 import { RxTriangleDown } from "react-icons/rx"
-import Sort from "./Sort/Sort";
+// import Sort from "./Sort/Sort";
 const Page = () => {
   const router = useRouter();
   const {
     metadata,
     setMetadata,
-    setIsRunGA,
     dbo_evaluation,
     setdbo_evaluation,
     DBo_POP,
@@ -41,14 +40,15 @@ const Page = () => {
     setFinal_eval_all,
     final_DBO,
     setFinal_DBO,
-    fileData
+    fileData,
+    best_DBos,
+    setBest_DBos,
+    best_DBos_SVGs,
+    setBest_DBos_SVGs
   } = useContext(StateContext);
   const [GenerationType, setGenerationType] = useState("Complete");
   const [UserFeedbackIntegration, setUserFeedbackIntegration] = useState(true);
 
-  React.useEffect(() => {
-    setIsRunGA(true);
-  }, []);
   const visualtizations = [
     {
       name: "Histogram",
@@ -99,6 +99,9 @@ const Page = () => {
       tempfinalDataEval = tempfinalDataEval.map((item) => item.split(","));
       setFinal_eval_all(tempfinalDataEval);
       console.log(final_eval_all);
+      setTimeout(() => {
+        get_Best_DBos(tempfinalDataEval, fileData, updatedDBO, setBest_DBos, router)
+      }, 100)
     }
   };
 
@@ -124,6 +127,36 @@ const Page = () => {
       runGeneticAlgorithm(data.data.Dbo, data.data.DBo_eval);
     }
   };
+
+  const getVisualizationFromBackend = async () => {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/dashboards/getallDashboards`, {
+      method: "POST",
+      body: JSON.stringify({
+        fileData: fileData,
+        metadata: metadata,
+        best_DBos: best_DBos,
+        data2: metadata[0].slice(1, metadata[0].length)
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await res.json();
+    console.log(data);
+    if (res.status == 200) {
+      data.ArrayOfDashboards.forEach((element, index) => {
+        console.log(element.visualizationArray);
+      })
+      setBest_DBos_SVGs(data.ArrayOfDashboards);
+      setTimeout(() => {
+        router.push("/Screen3");
+      },100)
+    }
+  };
+  useEffect(() => {
+    if(best_DBos.length>0)
+    getVisualizationFromBackend();
+  }, [best_DBos])
 
   useEffect(() => {
     if (userType === "Novice") {
@@ -158,11 +191,11 @@ const Page = () => {
             <div className="flex items-center">
 
               {
-                fileData.length && fileData[0].length &&
+                fileData?.length && fileData[0]?.length &&
                 <>
                   <p className=" font-semibold text-2xl flex w-max justify-center items-center gap-2 tooltip tooltip-right" data-tip="The preprocessed data uploaded by user">User Data
                     <AiOutlineInfoCircle className="self-center" />
-                    : </p><span className="font-regular">&nbsp; {fileData.length} Rows, {fileData[0].length} Columns</span>
+                    : </p><span className="font-regular">&nbsp; {fileData?.length} Rows, {fileData[0]?.length} Columns</span>
                 </>
               }
             </div>
@@ -332,12 +365,11 @@ const Page = () => {
             Next Page
           </button>
         </div>
+        {/* {
+          final_DBo_all.length > 0 && final_eval_all.length > 0 &&
+          <Sort/>
+        } */}
       </div>
-      {
-        final_DBo_all.length > 0 && final_eval_all.length > 0 && (
-          <Sort />
-        )
-      }
     </>
   );
 };
@@ -451,7 +483,7 @@ const UserData2 = ({
                         id=""
                         className="bg-primary outline-none w-full"
                         onChange={(e) => {
-                          console.log("Value is: ",e.target.value);
+                          console.log("Value is: ", e.target.value);
                           handleChange(e.target.value, index1, index2);
                         }}
                       >
